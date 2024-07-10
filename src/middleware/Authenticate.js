@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken"
-import User from "../models/User";
-import Organisation from "../models/Organisation";
+// import User from "../models/User";
+import Organisation from "../models/Organisation.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const authenticate = (req, res, next) => {
+export const authenticate = (req, res, next) => {
   const token = req.header('Authorization').replace('Bearer ', '');
 
   try {
@@ -19,12 +19,12 @@ const authenticate = (req, res, next) => {
 
 
 
-const authorize = async (req, res, next) => {
+export const authorize = async (req, res, next) => {
   const userId = req.user.id; // Assuming req.user is set by authentication middleware
 
   try {
     // Check if user is part of the requested organisation
-    const organisationId = req.params.organisationId; // Assuming organisationId is passed in URL
+    const organisationId = req.params.orgId; // Assuming organisationId is passed in URL
     const organisation = await Organisation.findByPk(organisationId);
 
     if (!organisation) {
