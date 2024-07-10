@@ -5,12 +5,12 @@ const router = Router();
 
 router.post("/auth/register", authenticate, authorize, addUser)
 router.post("/auth/login", authenticate, authorize, Login)
-router.get("/api/users/:id", GetDetails)
 router.get(" /api/organisations", GetOrganisations)
-router.get(" /api/organisations/:orgId", GetOneOrganisation )
 router.post("/api/organisations", authenticate,  [
     body('name').notEmpty().withMessage('Name is required'),
   ], CreateOrganisation )
+router.get("/api/users/:id", GetDetails)
+router.get(" /api/organisations/:orgId", GetOneOrganisation )
 router.post("/api/organisations/:orgId/users", authenticate, addToOrganisation )
 
 export default router;

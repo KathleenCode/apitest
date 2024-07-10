@@ -16,7 +16,7 @@ export const addUser = async(req, res) => {
         //   }
         const { userId, firstName, lastName, email, password, phone } = req.body;
         const user = await User.create(req.body);
-        const accessToken = jwt.sign({ userId: newUser.id }, 'your_secret_key', { expiresIn: '1h' });
+        const accessToken = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.status(201).json({
             "status": "success",
             "message": "Registration successful",
@@ -101,11 +101,11 @@ export const Login = async(req, res) => {
 
 export const GetDetails = async(req, res) => {
     try {
-        const { userId } = req.params;
+        const { id } = req.params;
          // Find organisations where the user belongs or created
     const organisations = await Organisation.findAll({
         where: {
-          createdByUserId: userId,
+          createdByUserId: id,
         },
       });
         res.status(200).json({
