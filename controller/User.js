@@ -19,7 +19,7 @@ export const addUser = async(req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const user = await User.create({ userId, firstName, lastName, email, password: hashedPassword, phone, orgId: user.id, name: user.firstName, description: user.email });
         const org = { orgId: user.id, name: user.firstName, description: user.email }
-        const accessToken = jwt.sign({ id: userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
+        const accessToken = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
         console.log(accessToken);
         res.cookie('token', accessToken, {
           // maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -75,7 +75,7 @@ export const Login = async(req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '5h' });
+    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
 
     res.status(200).json({ "status": "success",
     "message": "Login successful",
