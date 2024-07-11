@@ -16,7 +16,7 @@ const organisation = sequelize.define('Organisation', {
     }, 
 }, {timestamps: false});
 
-// await organisation.sync();
-// console.log("The Organisation model table was just created");
+await organisation.sync();
+console.log("The Organisation model table was just created");
 
 export default organisation;

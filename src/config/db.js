@@ -4,11 +4,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
-    host: process.env.MYSQL_HOST,
+    // host: process.env.MYSQL_HOST,
     dialect: 'mysql',
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 9000,
-    logging: false, // Disable logging (useful in production)
+    // logging: false, // Disable logging (useful in production)
 });
 
 try {

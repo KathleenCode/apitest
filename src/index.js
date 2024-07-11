@@ -11,14 +11,14 @@ const PORT = process.env.PORT || 9005;
 
 const app = express();
 
+app.use(express.json());
+
+app.use(UserRoutes);
+
 User.belongsToMany(Organisation, { through: 'UserOrganisation' });
 Organisation.belongsToMany(User, { through: 'UserOrganisation' });
 
 await sequelize.sync();
 console.log("All tables have been created");
-
-app.use(express.json());
-
-app.use("/", UserRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
