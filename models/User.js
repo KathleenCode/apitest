@@ -8,7 +8,7 @@ import Organisation from "./Organisation.js";
 const User = sequelize.define("User", {
     userId: {
         type: DataTypes.STRING,
-        autoIncrement: true,
+        // autoIncrement: true,
         primaryKey: true,
         unique: true,
         validate: {

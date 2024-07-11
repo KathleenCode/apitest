@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Organisation from "../models/Organisation.js";
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken"
 
 export const addUser = async(req, res) => {
