@@ -14,8 +14,9 @@ export const addUser = async(req, res) => {
         //   if (existingUser) {
         //     return res.status(400).json({ message: 'User already exists.' });
         //   }
+        const hashedPassword = await bcrypt.hash(password, salt);
         const { userId, firstName, lastName, email, password, phone } = req.body;
-        const user = await User.create({ userId, firstName, lastName, email, password, phone });
+        const user = await User.create({ userId, firstName, lastName, email, password: hashedPassword, phone });
         const org = { orgId: user.id, name: user.firstName, description: user.email }
         const accessToken = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
         console.log(accessToken);
