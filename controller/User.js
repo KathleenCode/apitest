@@ -16,7 +16,7 @@ export const addUser = async(req, res) => {
         //   }
         const hashedPassword = await bcrypt.hash(password, salt);
         const { userId, firstName, lastName, email, password, phone } = req.body;
-        const user = await User.create({ userId, firstName, lastName, email, password: hashedPassword, phone });
+        const user = await User.create({ userId, firstName, lastName, email, password: hashedPassword, phone, orgId: user.id, name: user.firstName, description: user.email });
         const org = { orgId: user.id, name: user.firstName, description: user.email }
         const accessToken = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
         console.log(accessToken);
