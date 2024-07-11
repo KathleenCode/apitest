@@ -15,8 +15,14 @@ export const addUser = async(req, res) => {
         //     return res.status(400).json({ message: 'User already exists.' });
         //   }
         const { userId, firstName, lastName, email, password, phone } = req.body;
-        const user = await User.create(req.body);
-        const accessToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const user = await User.create({ userId, firstName, lastName, email, password, phone });
+        const org = { orgId: user.id, name: user.firstName, description: user.email }
+        const accessToken = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
+        console.log(accessToken);
+        res.cookie('jwt', token, {
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+          httpOnly: true
+      })
         res.status(201).json({
             "status": "success",
             "message": "Registration successful",
@@ -30,7 +36,7 @@ export const addUser = async(req, res) => {
                   "phone": user.phone,
               }
             }
-        },{ orgId: user.id, name: user.firstName, description: user.email });      } catch (error) {
+        })} catch (error) {
         if (error.name === 'SequelizeValidationError') {
           // Handle validation errors
           const errors = error.errors.map(err => ({
@@ -67,7 +73,7 @@ export const Login = async(req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '5h' });
 
     res.status(200).json({ "status": "success",
     "message": "Login successful",
@@ -138,7 +144,7 @@ export const GetDetails = async(req, res) => {
 }
 
 export const GetOrganisations = async(req, res) => {
-    const id = req.user.userId;
+    const id = req.userId;
 
   try {
     // Find organisations where the user belongs or created
@@ -177,7 +183,7 @@ export const GetOrganisations = async(req, res) => {
 }
 }
 export const GetOneOrganisation = async(req, res) => {
-    const idp = req.user.userId;
+    const idp = req.userId;
     const orgId = req.params.orgId;
 
   try {
@@ -229,7 +235,7 @@ export const CreateOrganisation =  async(req, res) => {
         }
       
         const { name, description } = req.body;
-        const userId = req.user.userId;
+        const userId = req.userId;
       
         try {
           // Create new organisation
@@ -266,7 +272,7 @@ export const CreateOrganisation =  async(req, res) => {
 export const addToOrganisation =async(req, res) => {
     const { orgId } = req.params;
   const { userId } = req.body;
-  const currentUserId = req.user.userId;
+  const currentUserId = req.userId;
 
   try {
     // Check if the logged-in user has permission to add users to this organisation

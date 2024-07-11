@@ -1,26 +1,37 @@
 import jwt from "jsonwebtoken"
 // import User from "../models/User";
 import Organisation from "../models/Organisation.js";
+import User from "../models/User.js"
 import dotenv from "dotenv";
 
 dotenv.config();
 
 export const authenticate = (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
+
+  let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+  let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
   try {
-    const decoded = jwt.verify(token, 'process.env.SECRET_KEY');
-    req.user = decoded;
-    next();
+      const token = req.header(tokenHeaderKey);
+
+      const verified = jwt.verify(token, jwtSecretKey);
+      if (verified) {
+          return res.send("Successfully Verified");
+      } else {
+          // Access Denied
+          return res.status(401).send(error);
+      }
   } catch (error) {
-    res.status(401).json({ message: 'Unauthorized' });
-  }
-};
+      // Access Denied
+      console.log(error)
+    next();
+}
+}
 
 
 
 export const authorize = async (req, res, next) => {
-  const userId = req.user.id; // Assuming req.user is set by authentication middleware
+  const userId = req.userId; // Assuming req.user is set by authentication middleware
 
   try {
     // Check if user is part of the requested organisation
