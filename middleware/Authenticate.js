@@ -12,9 +12,12 @@ export const authenticate = (req, res, next) => {
   let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
   try {
-      const token = req.header(tokenHeaderKey);
+      // const token = req.header(tokenHeaderKey);
+      const token = req.cookie.token;
 
-      const verified = jwt.verify(token, jwtSecretKey);
+      const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req.userId = verified;
+      next();
       if (verified) {
           return res.send("Successfully Verified");
       } else {
@@ -23,8 +26,9 @@ export const authenticate = (req, res, next) => {
       }
   } catch (error) {
       // Access Denied
+      res.clearCookie("token");
       console.log(error)
-    next();
+      // next();
 }
 }
 
