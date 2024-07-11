@@ -14,16 +14,17 @@ export const addUser = async(req, res) => {
         //   if (existingUser) {
         //     return res.status(400).json({ message: 'User already exists.' });
         //   }
+        const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const { userId, firstName, lastName, email, password, phone } = req.body;
         const user = await User.create({ userId, firstName, lastName, email, password: hashedPassword, phone, orgId: user.id, name: user.firstName, description: user.email });
         const org = { orgId: user.id, name: user.firstName, description: user.email }
-        const accessToken = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
+        const accessToken = jwt.sign({ id: userId }, process.env.SECRET_KEY, { expiresIn: '5h' });
         console.log(accessToken);
-        res.cookie('jwt', token, {
-          maxAge: 3 * 24 * 60 * 60 * 1000,
+        res.cookie('token', accessToken, {
+          // maxAge: 3 * 24 * 60 * 60 * 1000,
           httpOnly: true
-      })
+        })
         res.status(201).json({
             "status": "success",
             "message": "Registration successful",
@@ -272,8 +273,8 @@ export const CreateOrganisation =  async(req, res) => {
  
 export const addToOrganisation =async(req, res) => {
     const { orgId } = req.params;
-  const { userId } = req.body;
-  const currentUserId = req.userId;
+    const { userId } = req.body;
+    const currentUserId = req.userId;
 
   try {
     // Check if the logged-in user has permission to add users to this organisation
