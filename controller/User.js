@@ -16,7 +16,7 @@ export const addUser = async(req, res) => {
         //   }
         const { userId, firstName, lastName, email, password, phone } = req.body;
         const user = await User.create(req.body);
-        const accessToken = jwt.sign({ userId: newUser.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const accessToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.status(201).json({
             "status": "success",
             "message": "Registration successful",

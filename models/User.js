@@ -60,7 +60,7 @@ const User = sequelize.define("User", {
 },
 // {freezeTableName: true} 
 // {tableName: "newTableName"}
-{timestamps: true}
+{timestamps: false}
 );
 
 User.afterCreate(async (user) => {
